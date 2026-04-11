@@ -21,7 +21,9 @@ export function TicketCard({ ticket }: { ticket: Ticket }) {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div className="space-y-3 flex-1">
           <div className="flex items-center gap-3">
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">#{ticket.id.slice(-6).toUpperCase()}</span>
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">
+              {ticket.ticketNumber || `#${ticket.id.slice(-6).toUpperCase()}`}
+            </span>
             <div className={cn(
               "px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-widest",
               ticket.status === 'open' ? "bg-emerald-50 text-emerald-600 dark:bg-emerald-950/30" : "bg-slate-100 text-slate-500 dark:bg-slate-800"
@@ -47,7 +49,7 @@ export function TicketCard({ ticket }: { ticket: Ticket }) {
                <Tag className="h-3.5 w-3.5" />
                {ticket.category || 'Uncategorized'}
             </div>
-            {ticket.aiClassified && (
+            {ticket.isAIProcessed && (
                <div className="flex items-center gap-1.5 text-xs font-bold text-primary px-2 py-1 rounded-lg bg-primary/5">
                   <Sparkles className="h-3 w-3" />
                   AI Triage
@@ -67,7 +69,9 @@ export function TicketCard({ ticket }: { ticket: Ticket }) {
                   {ticket.priority} Priority
                 </span>
              </div>
-             <p className="text-[10px] text-slate-400 font-bold uppercase tracking-tighter">Assigned: {ticket.assignedToName || 'Queue'}</p>
+             <p className="text-[10px] text-slate-500 font-bold uppercase tracking-tighter">
+               Req: {ticket.creator?.name || 'User'}
+             </p>
           </div>
           
           <div className="h-10 w-10 rounded-full bg-slate-50 dark:bg-slate-800 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all transform group-hover:rotate-45">

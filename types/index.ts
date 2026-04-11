@@ -4,6 +4,7 @@ export interface ApiResponse<T> {
   success: boolean;
   data: T;
   message?: string;
+  meta?: any;
 }
 
 export interface User {
@@ -22,6 +23,7 @@ export interface AuthPayload {
 
 export interface Ticket {
   id: string;
+  _id?: string;
   title: string;
   description: string;
   status: 'open' | 'in_progress' | 'resolved' | 'closed';
@@ -29,9 +31,20 @@ export interface Ticket {
   category: string;
   createdAt: string;
   updatedAt: string;
-  ownerId: string;
-  assigneeId?: string;
+  creator?: User;
+  assignee?: User | null;
+  ticketNumber?: string;
   tags?: string[];
+  isAIProcessed?: boolean;
+  resolution?: string | null;
+  attachments?: string[];
+  closedAt?: string | null;
+  aiMetadata?: {
+    classification?: {
+      suggestedTags?: string[];
+    };
+    similarTicketIds?: string[];
+  };
 }
 
 export interface TicketListResponse {
@@ -40,6 +53,9 @@ export interface TicketListResponse {
     page: number;
     limit: number;
     total: number;
+    totalPages?: number;
+    hasNext?: boolean;
+    hasPrev?: boolean;
   };
 }
 

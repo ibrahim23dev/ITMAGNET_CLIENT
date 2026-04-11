@@ -28,7 +28,7 @@ export const authApi = {
 
 export const ticketApi = {
   list: (params?: Record<string, string | number | undefined>) => 
-    api.get<ApiResponse<TicketListResponse>>('/tickets', { params }).then(res => {
+    api.get<ApiResponse<Ticket[]>>('/tickets', { params }).then(res => {
       if (!res.data.success) {
         throw new Error(res.data.message || 'Failed to fetch tickets');
       }

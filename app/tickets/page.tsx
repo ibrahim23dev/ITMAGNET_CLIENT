@@ -6,11 +6,27 @@ import { useTicketsQuery } from '@/hooks/useTickets';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { Plus, Filter, Search, Loader2, Inbox } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function TicketsPage() {
   const [page, setPage] = useState(1);
-  const tickets = useTicketsQuery({ page, limit: 12 });
+  const [searchTerm, setSearchTerm] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState('');
+
+  // Debounce search term
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(searchTerm);
+      setPage(1); // Reset to first page on search
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [searchTerm]);
+
+  const tickets = useTicketsQuery({ 
+    page, 
+    limit: 12, 
+    search: debouncedSearch || undefined 
+  });
 
   return (
     <DashboardShell activePath="/tickets" title="Ticket Hub">
@@ -23,6 +39,8 @@ export default function TicketsPage() {
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400 group-focus-within:text-primary transition-colors" />
                 <input 
                   type="text" 
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
                   placeholder="Search tickets by title, ID or user..." 
                   className="w-full h-12 pl-12 pr-4 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all text-sm"
                 />
@@ -65,9 +83,20 @@ export default function TicketsPage() {
                 >
                   Previous
                 </Button>
-                <span className="text-sm font-bold">Page {page}</span>
+                <div className="flex items-center gap-2">
+                   <span className="text-sm font-bold bg-primary text-white h-8 w-8 rounded-full flex items-center justify-center shadow-lg shadow-primary/20">
+                     {page}
+                   </span>
+                   {tickets.data?.meta.totalPages && tickets.data.meta.totalPages > page && (
+                      <>
+                        <span className="text-slate-400">/</span>
+                        <span className="text-sm text-slate-500">{tickets.data.meta.totalPages}</span>
+                      </>
+                   )}
+                </div>
                 <Button 
                    variant="outline" 
+                   disabled={!tickets.data?.meta.hasNext}
                    onClick={() => setPage(page + 1)}
                    className="rounded-xl"
                 >

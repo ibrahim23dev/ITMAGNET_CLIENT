@@ -59,7 +59,7 @@ export default function TicketDetailPage() {
   }
 
   return (
-    <DashboardShell activePath="/tickets" title={`Ticket #${ticketId.slice(-6).toUpperCase()}`}>
+    <DashboardShell activePath="/tickets" title={ticket.ticketNumber || `Ticket #${ticketId.slice(-6).toUpperCase()}`}>
       <div className="space-y-8 pb-20">
         {/* Header Section */}
         <div className="group relative rounded-[2.5rem] border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-8 lg:p-10 shadow-sm overflow-hidden">
@@ -77,24 +77,24 @@ export default function TicketDetailPage() {
                 <h1 className="text-3xl lg:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-tight">
                   {ticket.title}
                 </h1>
-                <div className="flex flex-wrap gap-4 items-center text-sm font-medium">
+                 <div className="flex flex-wrap gap-4 items-center text-sm font-medium">
                    <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">
                      <Clock className="h-4 w-4" />
                      Created {new Date(ticket.createdAt).toLocaleDateString()}
                    </div>
                    <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">
                      <UserIcon className="h-4 w-4" />
-                     {ticket.userName || 'Customer'}
+                     {ticket.creator?.name || 'Customer'}
                    </div>
                 </div>
               </div>
 
               <div className="flex flex-col gap-4 min-w-[200px]">
                  <div className="flex gap-2 justify-end">
-                    <Badge variant={ticket.status === 'open' ? 'success' : 'outline'} className="rounded-lg h-8 px-3 uppercase text-[10px] tracking-widest font-bold">
+                    <Badge variant={ticket.status === 'open' ? 'success' : 'neutral'} className="rounded-lg h-8 px-3 uppercase text-[10px] tracking-widest font-bold">
                        {ticket.status}
                     </Badge>
-                    <Badge variant={ticket.priority === 'high' ? 'destructive' : 'warning'} className="rounded-lg h-8 px-3 uppercase text-[10px] tracking-widest font-bold">
+                    <Badge variant={ticket.priority === 'high' || ticket.priority === 'critical' ? 'danger' : 'warning'} className="rounded-lg h-8 px-3 uppercase text-[10px] tracking-widest font-bold">
                        {ticket.priority}
                     </Badge>
                  </div>

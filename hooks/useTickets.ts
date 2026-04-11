@@ -17,11 +17,22 @@ export const useTicketsQuery = (params?: Record<string, string | number | undefi
     queryFn: async () => {
       try {
         const response = await ticketApi.list(params);
-        const data = response.data?.data;
-        if (!data || !Array.isArray(data.tickets)) {
-          throw new Error('Invalid response structure: expected tickets array');
+        const data = response.data;
+        
+        // Ensure data exists and map _id to id
+        if (!data || !Array.isArray(data.data)) {
+          throw new Error('Invalid response structure: expected data array');
         }
-        return data;
+
+        const tickets = data.data.map((t: any) => ({
+          ...t,
+          id: t._id || t.id
+        }));
+
+        return {
+          tickets,
+          meta: data.meta
+        };
       } catch (error) {
         if (error instanceof Error) {
           throw error;
@@ -30,8 +41,8 @@ export const useTicketsQuery = (params?: Record<string, string | number | undefi
       }
     },
     retry: 1,
-    staleTime: 30000, // 30 seconds
-    gcTime: 5 * 60 * 1000, // 5 minutes (formerly cacheTime)
+    staleTime: 30000, 
+    gcTime: 5 * 60 * 1000,
   });
 };
 
@@ -48,10 +59,13 @@ export const useTicketQuery = (ticketId: string): UseQueryResult<Ticket, Error> 
       try {
         const response = await ticketApi.get(ticketId);
         const data = response.data?.data;
-        if (!data || !data.id) {
+        if (!data) {
           throw new Error('Invalid response structure: expected ticket object');
         }
-        return data;
+        return {
+          ...data,
+          id: data._id || data.id
+        };
       } catch (error) {
         if (error instanceof Error) {
           throw error;

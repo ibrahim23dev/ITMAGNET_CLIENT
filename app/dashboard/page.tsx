@@ -9,6 +9,7 @@ import { TicketCard } from '@/components/tickets/ticket-card';
 import { useAnalyticsQuery } from '@/hooks/useAnalytics';
 import { useTicketsQuery } from '@/hooks/useTickets';
 import { AlertTriangle, Sparkles, TrendingUp, Users, Clock, CheckCircle2 } from 'lucide-react';
+import Link from 'next/link';
 
 export default function DashboardPage() {
   const { accessToken } = useAuthStore();
