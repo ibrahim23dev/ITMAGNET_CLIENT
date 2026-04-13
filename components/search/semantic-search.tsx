@@ -25,7 +25,7 @@ export function SemanticSearch() {
   };
 
   // Safely extract search results
-  const results = searchMutation.data?.data as SearchResult[] | undefined;
+  const results = searchMutation.data as SearchResult[] | undefined;
   const hasResults = Array.isArray(results) && results.length > 0;
 
   return (

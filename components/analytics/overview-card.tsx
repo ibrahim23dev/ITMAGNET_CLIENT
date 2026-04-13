@@ -4,8 +4,9 @@ import type { AnalyticsSnapshot } from '@/types';
 import { Badge } from '@/components/ui/badge';
 
 export function OverviewCard({ snapshot }: { snapshot: AnalyticsSnapshot }) {
+  console.log('Rendering OverviewCard with snapshot:', snapshot);
   return (
-    <div className="grid gap-4 rounded-3xl border border-slate-200/80 bg-white p-6 shadow-panel md:grid-cols-4">
+    <div className="grid gap-4 border border-slate-200/80 bg-white p-6 md:grid-cols-4">
       <div className="space-y-2">
         <p className="text-sm text-slate-500">Total tickets</p>
         <p className="text-3xl font-semibold text-slate-950">{snapshot.totalTickets}</p>

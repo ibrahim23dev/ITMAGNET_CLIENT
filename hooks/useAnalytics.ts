@@ -1,35 +1,42 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import type { UseQueryResult } from '@tanstack/react-query';
 import { ticketApi } from '@/lib/api';
-import type { AnalyticsSnapshot } from '@/types';
 
-/**
- * Fetch dashboard analytics and metrics
- * @returns React Query result with AnalyticsSnapshot data
- * @throws Error with descriptive message if request fails
- */
-export const useAnalyticsQuery = (): UseQueryResult<AnalyticsSnapshot, Error> => {
-  return useQuery<AnalyticsSnapshot, Error>({
+export const useAnalyticsQuery = () => {
+  return useQuery({
     queryKey: ['analytics'],
     queryFn: async () => {
-      try {
-        const response = await ticketApi.stats();
-        const data = response.data?.data;
-        if (!data || typeof data !== 'object') {
-          throw new Error('Invalid response structure: expected analytics object');
-        }
-        return data;
-      } catch (error) {
-        if (error instanceof Error) {
-          throw error;
-        }
-        throw new Error('Failed to fetch analytics');
-      }
+      const res: any = await ticketApi.stats();
+
+      // 🔥 FIX: সব possible case handle
+      const rawData =
+        res?.data?.data ||
+        res?.data ||
+        res ||
+        {};
+
+      console.log("🔥 RAW API DATA:", rawData);
+
+      return {
+        totalTickets: rawData.totalTickets ?? 0,
+        openTickets: rawData.openTickets ?? 0,
+        highPriority: rawData.ticketsByPriority?.high ?? 0,
+        avgResolutionTime: rawData.avgResolutionTime ?? '0h',
+
+        topCategories: rawData.ticketsByCategory
+          ? Object.entries(rawData.ticketsByCategory).map(([key, value]) => ({
+              category: key,
+              count: Number(value),
+            }))
+          : [],
+
+        riskTickets: [],
+      };
     },
+
     retry: 1,
-    staleTime: 60000, // 1 minute for analytics
-    gcTime: 5 * 60 * 1000, // 5 minutes
+    staleTime: 5000,
+    refetchInterval: 10000,
   });
 };

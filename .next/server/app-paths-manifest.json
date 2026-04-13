@@ -1,10 +1,7 @@
 {
-  "/_not-found/page": "app/_not-found/page.js",
+  "/dashboard/page": "app/dashboard/page.js",
   "/tickets/page": "app/tickets/page.js",
-  "/tickets/new/page": "app/tickets/new/page.js",
-  "/ai/page": "app/ai/page.js",
-  "/settings/page": "app/settings/page.js",
-  "/tickets/[id]/page": "app/tickets/[id]/page.js",
-  "/search/page": "app/search/page.js",
-  "/dashboard/page": "app/dashboard/page.js"
+  "/auth/login/page": "app/auth/login/page.js",
+  "/auth/register/page": "app/auth/register/page.js",
+  "/page": "app/page.js"
 }

@@ -19,6 +19,7 @@ export interface AuthPayload {
   email: string;
   password: string;
   name?: string;
+  role?: Role;
 }
 
 export interface Ticket {
@@ -70,11 +71,11 @@ export interface Comment {
 }
 
 export interface AiSuggestion {
-  summary: string;
-  reply: string;
-  actions: string[];
-  confidence: number;
-  relatedTickets?: Ticket[];
+  ticketId: string;
+  suggestedReply: string;
+  tone?: string;
+  ragContextUsed?: boolean;
+  similarTicketsFound?: number;
 }
 
 export interface AnalyticsSnapshot {
@@ -84,4 +85,26 @@ export interface AnalyticsSnapshot {
   avgResolutionTime: string;
   topCategories: { category: string; count: number }[];
   riskTickets: { id: string; title: string; riskLevel: string }[];
+}
+
+export interface AiClassification {
+  category: string;
+  categoryConfidence?: number;
+  priority: Ticket['priority'] | string;
+  priorityConfidence?: number;
+  suggestedTags?: string[];
+}
+
+export interface AiClassifyResult {
+  classification: AiClassification;
+  input: {
+    title?: string | null;
+    text: string;
+  };
+}
+
+export interface AiSummarizeResult {
+  ticketId: string;
+  summary: string;
+  commentCount?: number;
 }

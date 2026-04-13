@@ -14,6 +14,7 @@ export default function RegisterPage() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [role, setRole] = useState<'customer' | 'agent' | 'admin'>('customer');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const router = useRouter();
@@ -25,8 +26,8 @@ export default function RegisterPage() {
     setIsLoading(true);
 
     try {
-      const response = await authApi.register({ name, email, password, role: 'customer' });
-      const token = response.data.data.accessToken;
+      const response = await authApi.register({ name, email, password, role });
+      const token = response.accessToken;
       setToken(token);
       setCookie('itmagnet_access_token', token, 1);
       router.push('/dashboard');
@@ -41,7 +42,7 @@ export default function RegisterPage() {
     <div className="min-h-screen grid lg:grid-cols-2">
       {/* Left Side: Design/Features */}
       <div className="hidden lg:flex relative bg-primary overflow-hidden items-center justify-center p-12">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.1),transparent)]"></div>
+        <div className="absolute inset-0 bg-primary/20"></div>
         <div className="relative max-w-md space-y-12 text-white">
           <div className="space-y-4">
             <h2 className="text-4xl font-extrabold tracking-tight">
@@ -60,7 +61,7 @@ export default function RegisterPage() {
               "Real-time Analytics Dashboard"
             ].map((text, i) => (
               <div key={i} className="flex items-center gap-4 group">
-                <div className="h-10 w-10 flex-shrink-0 rounded-xl bg-white/20 flex items-center justify-center group-hover:bg-white/30 transition-colors">
+                <div className="h-10 w-10 flex-shrink-0 bg-white/20 flex items-center justify-center group-hover:bg-white/30 transition-colors">
                   <CheckCircle2 className="h-6 w-6" />
                 </div>
                 <span className="text-lg font-medium">{text}</span>
@@ -68,7 +69,7 @@ export default function RegisterPage() {
             ))}
           </div>
 
-          <div className="p-6 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/10">
+          <div className="p-6 bg-white/10 border border-white/10">
             <p className="text-sm italic">
               "Joining ITMAGNET was the best decision for our customer success team. We've seen a 300% increase in productivity."
             </p>
@@ -85,7 +86,7 @@ export default function RegisterPage() {
               <ArrowLeft className="mr-2 h-4 w-4" />
               Back to home
             </Link>
-            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary text-white shadow-xl shadow-primary/20">
+            <div className="flex h-12 w-12 items-center justify-center bg-primary text-white">
               <Ticket className="h-7 w-7" />
             </div>
             <div className="space-y-1">
@@ -103,7 +104,7 @@ export default function RegisterPage() {
               <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">Full Name</label>
               <Input 
                 required
-                className="h-12 rounded-xl bg-slate-100 dark:bg-slate-900 border-none px-4"
+                className="h-12 bg-slate-100 dark:bg-slate-800 border-none px-4"
                 value={name} 
                 onChange={(e) => setName(e.target.value)} 
                 placeholder="Jane Doe" 
@@ -114,7 +115,7 @@ export default function RegisterPage() {
               <Input 
                 type="email" 
                 required
-                className="h-12 rounded-xl bg-slate-100 dark:bg-slate-900 border-none px-4"
+                className="h-12 bg-slate-100 dark:bg-slate-900 border-none px-4"
                 value={email} 
                 onChange={(e) => setEmail(e.target.value)} 
                 placeholder="name@company.com" 
@@ -125,20 +126,33 @@ export default function RegisterPage() {
               <Input 
                 type="password" 
                 required
-                className="h-12 rounded-xl bg-slate-100 dark:bg-slate-900 border-none px-4"
+                className="h-12 bg-slate-100 dark:bg-slate-900 border-none px-4"
                 value={password} 
                 onChange={(e) => setPassword(e.target.value)} 
                 placeholder="••••••••" 
               />
             </div>
 
+            <div className="space-y-2">
+              <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">Account Type</label>
+              <select 
+                value={role}
+                onChange={(e) => setRole(e.target.value as 'customer' | 'agent' | 'admin')}
+                className="w-full h-12 bg-slate-100 dark:bg-slate-900 border-none px-4 rounded-md text-slate-700 dark:text-slate-300"
+              >
+                <option value="customer">Customer</option>
+                <option value="agent">Agent</option>
+                <option value="admin">Admin</option>
+              </select>
+            </div>
+
             {error && (
-              <div className="p-3 rounded-lg bg-rose-50 border border-rose-200 text-rose-600 text-sm">
+              <div className="p-3 bg-rose-50 border border-rose-200 text-rose-600 text-sm">
                 {error}
               </div>
             )}
 
-            <Button type="submit" disabled={isLoading} className="w-full h-12 rounded-xl text-lg font-semibold shadow-lg shadow-primary/20 transition-all hover:scale-[1.02]">
+            <Button type="submit" disabled={isLoading} className="w-full h-12 text-lg font-semibold transition-all hover:scale-[1.02]">
               {isLoading ? <Loader2 className="h-5 w-5 animate-spin" /> : 'Create Account'}
             </Button>
 

@@ -16,7 +16,7 @@ export const useCommentsQuery = (ticketId: string): UseQueryResult<Comment[], Er
     queryFn: async () => {
       try {
         const response = await commentApi.list(ticketId);
-        return response.data.data;
+        return response;
       } catch (error) {
         if (error instanceof Error) {
           throw error;
@@ -45,7 +45,7 @@ export const useCreateComment = (ticketId: string): UseMutationResult<
     mutationFn: async (payload: { body: string }) => {
       try {
         const response = await commentApi.create(ticketId, payload);
-        return response.data;
+        return response;
       } catch (error) {
         if (error instanceof Error) {
           throw error;

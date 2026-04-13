@@ -11,7 +11,7 @@ export function TicketCard({ ticket }: { ticket: Ticket }) {
   return (
     <Link 
       href={`/tickets/${ticket.id}`} 
-      className="group relative block rounded-[2rem] border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 shadow-sm transition-all duration-300 hover:shadow-xl hover:shadow-primary/5 hover:-translate-y-1 hover:border-primary/40 overflow-hidden"
+      className="group relative block border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 transition-all duration-300 hover:border-primary/60 hover:bg-slate-50/50 dark:hover:bg-slate-800/50 overflow-hidden"
     >
       {/* High Priority Indicator */}
       {isHighPriority && (
@@ -25,7 +25,7 @@ export function TicketCard({ ticket }: { ticket: Ticket }) {
               {ticket.ticketNumber || `#${ticket.id.slice(-6).toUpperCase()}`}
             </span>
             <div className={cn(
-              "px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-widest",
+              "px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest",
               ticket.status === 'open' ? "bg-emerald-50 text-emerald-600 dark:bg-emerald-950/30" : "bg-slate-100 text-slate-500 dark:bg-slate-800"
             )}>
               {ticket.status}
@@ -50,7 +50,7 @@ export function TicketCard({ ticket }: { ticket: Ticket }) {
                {ticket.category || 'Uncategorized'}
             </div>
             {ticket.isAIProcessed && (
-               <div className="flex items-center gap-1.5 text-xs font-bold text-primary px-2 py-1 rounded-lg bg-primary/5">
+               <div className="flex items-center gap-1.5 text-xs font-bold text-primary px-2 py-1 bg-primary/5">
                   <Sparkles className="h-3 w-3" />
                   AI Triage
                </div>
@@ -74,7 +74,7 @@ export function TicketCard({ ticket }: { ticket: Ticket }) {
              </p>
           </div>
           
-          <div className="h-10 w-10 rounded-full bg-slate-50 dark:bg-slate-800 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all transform group-hover:rotate-45">
+          <div className="h-10 w-10 bg-slate-50 dark:bg-slate-800 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all transform group-hover:rotate-45">
             <ChevronRight className="h-5 w-5" />
           </div>
         </div>
