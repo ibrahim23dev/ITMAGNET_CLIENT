@@ -15,27 +15,27 @@ export default function DashboardPage() {
   const router = useRouter();
   const authStore = useAuthStore();
   const { data: currentUser, isLoading: isLoadingUser, error: userError } = useCurrentUser();
-
+  const { user } = useAuthStore();
   useAutoRefreshToken();
 
-  // ✅ Redirect if not authenticated
   useEffect(() => {
     if (!authStore.accessToken && !isLoadingUser) {
       router.push('/auth/login');
     }
   }, [authStore.accessToken, isLoadingUser, router]);
 
-  // User mapping
   useEffect(() => {
     if (currentUser) {
+      const existingRole = authStore.user?.role;
+      const newRole = (currentUser.role as Role) || existingRole;
       authStore.setUser({
         id: currentUser.id,
         name: currentUser.name,
         email: currentUser.email,
-        role: currentUser.role as Role,
+        role: newRole,
       });
     }
-  }, [currentUser]);
+  }, [currentUser, authStore]);
 
   if (userError) {
     return (
@@ -60,7 +60,7 @@ export default function DashboardPage() {
     );
   }
 
-  if (!authStore.accessToken || isLoadingUser || !authStore.user) {
+  if (!authStore.accessToken || isLoadingUser) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 flex items-center justify-center">
         <div className="flex flex-col items-center gap-3">
@@ -71,16 +71,18 @@ export default function DashboardPage() {
     );
   }
 
-  const role = authStore.user?.role;
-  console.log("all date here", role);
+ 
+  const role = user?.role// For testing purposes, you can hardcode a role here
+
+  console.log('User data:', { currentUser, authStoreUser: authStore.user, role: role });
 
   const renderDashboard = () => {
-  if (role === 'admin') return <AdminDashboard />;
-  if (role === 'agent') return <AgentDashboard />;
-  if (role === 'customer') return <CustomerDashboard />;
+    if (role === 'admin') return <AdminDashboard />;
+    if (role === 'agent') return <AgentDashboard />;
+    if (role === 'customer') return <CustomerDashboard />;
 
-  return <div className="p-8 text-red-500">Unknown role: {role}</div>;
-};
+    return <div className="p-8 text-red-500">Unknown role: {role}</div>;
+  };
 
   const dashboardTitle = `${(role || 'USER').toUpperCase()} COMMAND CENTER`;
 
@@ -88,14 +90,13 @@ export default function DashboardPage() {
     <DashboardShell activePath="/dashboard" title={dashboardTitle}>
       <section className="space-y-8 p-6">
 
-        {/* Welcome Header */}
         <div className="bg-gradient-to-r from-indigo-600 to-violet-600 rounded-2xl p-8 text-white">
           <p className="text-sm opacity-90">Welcome back,</p>
           <h1 className="text-4xl font-bold mt-1">
-            {authStore.user?.name || 'Valued User'}
+            {user?.name || 'Valued User'}
           </h1>
           <p className="text-sm opacity-75 mt-2">
-            {authStore.user?.email}
+            {user?.email}
           </p>
         </div>
 

@@ -106,19 +106,17 @@ export const useAuthentication = () => {
  */
 export const useCurrentUser = (options?: any) => {
   const { accessToken } = useAuthStore();
-  const authStore = useAuthStore();
 
   return useQuery<User, Error>({
     queryKey: ['auth', 'me'],
     queryFn: async () => {
       const user = await authApi.me();
-      authStore.setUser(user);
       return user;
     },
     enabled: !!accessToken,
     retry: 1,
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    gcTime: 15 * 60 * 1000, // 15 minutes
+    staleTime: 5 * 60 * 1000,
+    gcTime: 15 * 60 * 1000,
     refetchOnWindowFocus: 'stale',
     ...options,
   });

@@ -16,8 +16,19 @@ interface AuthState {
   logout: () => void;
 }
 
+const loadStoredUser = (): User | null => {
+  if (typeof window === 'undefined') return null;
+  const stored = window.localStorage.getItem('itmagnet_user');
+  if (!stored) return null;
+  try {
+    return JSON.parse(stored);
+  } catch {
+    return null;
+  }
+};
+
 export const useAuthStore = create<AuthState>((set) => ({
-  user: null,
+  user: loadStoredUser(),
   accessToken:
     typeof window !== 'undefined'
       ? window.localStorage.getItem('itmagnet_access_token')
@@ -35,21 +46,32 @@ export const useAuthStore = create<AuthState>((set) => ({
   // ✅ FIXED USER SETTER
   setUser: (user) => {
     if (!user) {
+      if (typeof window !== 'undefined') {
+        window.localStorage.removeItem('itmagnet_user');
+      }
       set({ user: null });
       return;
     }
 
+    const userData = user as any;
     const normalizedUser: User = {
-      id: (user as any)._id || user.id,
-      name: user.name,
-      email: user.email,
-      role: user.role,
-      avatarUrl: user.avatarUrl,
+      id: userData._id || userData.id,
+      name: userData.name,
+      email: userData.email,
+      role: userData.role,
+      avatarUrl: userData.avatarUrl,
     };
 
-    console.log("✅ STORED USER:", normalizedUser);
+    if (typeof window !== 'undefined') {
+      window.localStorage.setItem('itmagnet_user', JSON.stringify(normalizedUser));
+    }
 
-    set({ user: normalizedUser });
+    set((state) => {
+      if (state.user?.id === normalizedUser.id && state.user?.email === normalizedUser.email) {
+        return state;
+      }
+      return { user: normalizedUser };
+    });
   },
 
   // ✅ TOKEN SETTER
@@ -77,6 +99,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     if (typeof window !== 'undefined') {
       window.localStorage.removeItem('itmagnet_access_token');
       window.localStorage.removeItem('itmagnet_refresh_token');
+      window.localStorage.removeItem('itmagnet_user');
       removeCookie('itmagnet_access_token');
       removeCookie('itmagnet_refresh_token');
     }

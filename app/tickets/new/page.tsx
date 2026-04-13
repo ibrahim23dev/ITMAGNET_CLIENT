@@ -135,11 +135,13 @@ export default function NewTicketPage() {
                   className="w-full h-12 bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 px-4 font-medium focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
                 >
                   <option value="bug">🐛 Bug</option>
-                  <option value="feature">✨ Feature Request</option>
-                  <option value="documentation">📚 Documentation</option>
+                  <option value="feature_request">✨ Feature Request</option>
+                  <option value="technical">📚 Technical</option>
                   <option value="performance">⚡ Performance</option>
                   <option value="security">🔒 Security</option>
-                  <option value="other">📋 Other</option>
+                  <option value="billing">💰 Billing</option>
+                  <option value="account">👤 Account</option>
+                  <option value="general">📋 General</option>
                 </select>
               </div>
             </div>
