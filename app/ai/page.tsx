@@ -154,15 +154,6 @@ export default function AiPage() {
                 Leverage AI to classify tickets, summarize conversations, and generate smart reply suggestions instantly.
               </p>
             </div>
-            <div className="h-32 w-32 bg-primary hidden lg:block" />
-          </div>
-        </div>
-              </div>
-              <h2 className="text-3xl lg:text-4xl font-extrabold">Intelligent Support Assistant</h2>
-              <p className="text-slate-600 dark:text-slate-400 text-lg max-w-2xl">
-                Leverage AI to classify tickets, summarize conversations, and generate smart reply suggestions instantly.
-              </p>
-            </div>
             <div className="h-32 w-32 rounded-2xl bg-gradient-to-br from-primary to-blue-600 shadow-lg hidden lg:block" />
           </div>
         </div>
